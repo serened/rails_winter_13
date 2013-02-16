@@ -3,8 +3,10 @@ require 'spec_helper'
 feature "Creating Tickets" do 
 	before do 
 		Factory(:project, :name => "Internet Explorer") 
-		user = Factory(:user, :email => "ticketee@example.com") 
-		user.confirm!
+		@user = Factory(:user, :email => "ticketee@example.com") 
+		#alternate way: remove hard coded email and use user.email instead
+		#set user to @user to access locally
+		@user.confirm!
 
 		visit '/' 
 		click_link "Internet Explorer" 
@@ -25,6 +27,7 @@ scenario "Creating a ticket" do
 	page.should have_content("Ticket has been created.")
 	within("#ticket #author") do 
 		page.should have_content("Created by ticketee@example.com")
+		#alternate way: "Created by #{@user.email}"
 	end
 end
 
