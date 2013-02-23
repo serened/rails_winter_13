@@ -1,7 +1,8 @@
 class ProjectsController < ApplicationController
-	before_filter :authorize_admin!, :except => [:index, :show] 
+	before_filter :authorize_admin!, :except => [:index, :show]
+	before_filter :authenticate_user!, :only => [:show]
 	before_filter :find_project, :only => [:show, :edit, :update, :destroy]
-											   
+
 	def index
 		@projects = Project.all
 	end
@@ -10,18 +11,18 @@ class ProjectsController < ApplicationController
 		@project = Project.new
 	end
 
-	def create 
-		@project = Project.new(params[:project]) 
+	def create
+		@project = Project.new(params[:project])
 		if @project.save
 			flash[:notice] = "Project has been created."
-			redirect_to @project 
+			redirect_to @project
 		else
-			flash[:alert] = "Project has not been created." 
+			flash[:alert] = "Project has not been created."
 			render :action => "new"
 		end
 	end
 
-	def show 
+	def show
 		@project = Project.find(params[:id])
 	end
 
@@ -29,29 +30,34 @@ class ProjectsController < ApplicationController
 		@project = Project.find(params[:id])
 	end
 
-	def update 
-		@project = Project.find(params[:id]) 
+	def update
+		@project = Project.find(params[:id])
 		if @project.update_attributes(params[:project])
 			flash[:notice] = "Project has been updated."
-			redirect_to @project 
+			redirect_to @project
 		else
 			flash[:alert] = "Project has not been updated."
-			render :action => "edit" 
+			render :action => "edit"
 		end
 	end
 
-	def destroy 
-		@project = Project.find(params[:id]) 
+	def destroy
+		@project = Project.find(params[:id])
 		@project.destroy
-		flash[:notice] = "Project has been deleted." 
-		redirect_to projects_path 
+		flash[:notice] = "Project has been deleted."
+		redirect_to projects_path
 	end
 
-	private 
+	private
 		def find_project
-			@project = Project.find(params[:id]) 
-			rescue ActiveRecord::RecordNotFound 
-			flash[:alert] = "The project you were looking for could not be found." 
+			# @project = Project.find(params[:id])
+			@project = if current_user.admin?
+				Project.find(params[:id])
+			else Project.viewable_by(current_user).find(params[:id])
+			end
+
+			rescue ActiveRecord::RecordNotFound
+			flash[:alert] = "The project you were looking for could not be found."
 			redirect_to projects_path
 		end
 end
