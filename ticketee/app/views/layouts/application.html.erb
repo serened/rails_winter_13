@@ -2,11 +2,11 @@
 <%= stylesheet_link_tag "application" %>
 <html>
 <head>
-<title> 
+<title>
   	<% if content_for?(:title) %>
-	<%= yield(:title) %> 
+	<%= yield(:title) %>
 	<% else %>
-	Ticketee 
+	Ticketee
 	<% end %>
 </title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
@@ -15,16 +15,17 @@
 </head>
 <body>
 
-<% flash.each do |key, value| %> 
+<% flash.each do |key, value| %>
 <div class='flash' id='<%= key %>'>
-	<%= value %> 
+	<%= value %>
 </div>
 <% end %>
-<nav> 
-	<% if user_signed_in? %> 
-	Signed in as <%= current_user.email %> 
+<nav>
+	<% if user_signed_in? %>
+	Signed in as <%= current_user.email %>
+	<%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
 	<% admins_only do %>
-	<%= link_to "Admin", admin_root_path %> 
+	<%= link_to "Admin", admin_root_path %>
 	<% end %>
 <% else %>
 	<%= link_to "Sign up", new_user_registration_path %>

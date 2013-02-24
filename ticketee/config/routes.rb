@@ -3,8 +3,10 @@ Ticketee::Application.routes.draw do
  # get "users/index"
  # get "/admin/users/index"
 namespace :admin do
-	root :to => "base#index"
-	resources :users
+  root :to => "base#index"
+  resources :users do
+    resources :permissions
+  end
 end
 
   devise_for :users, :controllers => { :registrations => "registrations" }
@@ -16,4 +18,9 @@ end
   resources :projects do
     resources :tickets
   end
+
+  put '/admin/users/:user_id/permissions',
+  :to => 'admin/permissions#update',
+  :as => :update_user_permissions
+
 end
