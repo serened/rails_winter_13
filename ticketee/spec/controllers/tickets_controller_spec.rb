@@ -41,7 +41,9 @@ describe TicketsController do
 
       it "cannot edit a ticket without permission" do
         put :edit, { :project_id => project.id, :id => ticket.id }
+        #brackets grab the info to get the URL, for routing
         cannot_update_tickets!
+
       end
 
       it "cannot update a ticket without permission" do
