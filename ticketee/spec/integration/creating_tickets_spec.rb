@@ -43,10 +43,10 @@ feature "Creating Tickets" do
   scenario "Creating a ticket with an attachment", :js => true do
     fill_in "Title", :with => "Add documentation for blink tag"
     fill_in "Description", :with => "Blink tag's speed attribute"
-    attach_file "File #1", "spec/fixtures/speed.txt"
+    attach_file "File #1", File.expand_path("spec/fixtures/speed.txt")
 
     click_link "Add another file"
-    attach_file "File #2", "spec/fixtures/spin.txt"
+    attach_file "File #2", File.expand_path("spec/fixtures/spin.txt")
     click_button "Create Ticket"
     page.should have_content("Ticket has been created.")
 
